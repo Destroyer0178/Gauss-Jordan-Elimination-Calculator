@@ -1,0 +1,1 @@
+Utilizes an implementation of Gauss-Jordan Elimination in Java alongside a GUI created with Java Swing to transform user-entered matrices into reduced row-echelon-form. Works for any user-entered m x n matrix.
