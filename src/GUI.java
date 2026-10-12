@@ -69,7 +69,7 @@ public class GUI extends JFrame{
                             matrix[row][col] = Double.parseDouble(matrixFields[row][col].getText().trim());
                         }
                     }
-                    outputArea.setText(GaussianElimination.stringArray(GaussianElimination.rowReduce(matrix)));
+                    outputArea.setText(GaussJordanElimination.stringArray(GaussJordanElimination.rowReduce(matrix)));
 
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(gridPanel, "Invalid input. Please enter a real number in "
