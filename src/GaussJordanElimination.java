@@ -3,14 +3,14 @@ package src;
 public class GaussJordanElimination {
 
     /**
-     * Adds to rows togethor and multiplies each by a given scalar multiple before replacing rowTwo with the result.
+     * Adds two rows togethor and multiplies each by a given scalar multiple before replacing rowTwo with the result.
      * @param rowOne the first row of the matrix that will remain unchanged.
      * @param rowTwo the secoond row of the matrix that will be assigned the result of the row operation
      * @param scalarOne the scalar value by which the first row will be multiplied
      * @param scalarTwo the scalar value by which the second row will be multiplied
      * @return the changed row resulting from the row operation
      */
-    public static double[] rowOperation(double[] rowOne, double[] rowTwo, double scalarOne, double scalarTwo) {
+    public static double[] rowAddition(double[] rowOne, double[] rowTwo, double scalarOne, double scalarTwo) {
         double[] tempRowOne = new double[rowOne.length];
 
         for (int i = 0; i < rowOne.length; i++) {
@@ -144,9 +144,9 @@ public class GaussJordanElimination {
                 double rowVal = matrix[j][i];
                 if (j != i) {
                     if (rowVal > 0) {
-                        rowOperation(matrix[i], matrix[j], rowVal / pivotVal, -1);
+                        rowAddition(matrix[i], matrix[j], rowVal / pivotVal, -1);
                     } else if (rowVal < 0) {
-                        rowOperation(matrix[i], matrix[j], -1 * rowVal / pivotVal, 1);
+                        rowAddition(matrix[i], matrix[j], -1 * rowVal / pivotVal, 1);
                     } 
                 }
             } 
@@ -182,6 +182,13 @@ public class GaussJordanElimination {
         return Math.round(Math.random() * max);
     }
 
+    /**
+     * Determines if a given floating point number should be zeroed using a user inputted tolerance.
+     * @param entry the number for which the determination should be made
+     * @param tolerance the minimum value for which the absolute value of the floating point number 
+     *                  can be without being zeroed
+     * @return a boolean value, true if the entry should be zeroed and false otherwise
+     */
     public static boolean shouldZero(double entry, double tolerance) {
         return (entry < tolerance && entry >  tolerance * -1);
     }
