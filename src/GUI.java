@@ -16,7 +16,7 @@ public class GUI extends JFrame{
      * Constructs the GUI as a JFrame that implements the functionality of the GaussianElimination class.
      */
     public GUI() {
-        setTitle("Gaussian Elimination Calculator");
+        setTitle("Gauss-Jordan Elimination Calculator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
 
@@ -32,6 +32,8 @@ public class GUI extends JFrame{
 
         JButton createGridButton = new JButton("Generate Grid");
         inputPanel.add(createGridButton);
+        JCheckBox decimalToggle = new JCheckBox("Decimal");
+        inputPanel.add(decimalToggle);
 
         gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(1, 1));
@@ -69,7 +71,7 @@ public class GUI extends JFrame{
                             matrix[row][col] = Double.parseDouble(matrixFields[row][col].getText().trim());
                         }
                     }
-                    outputArea.setText(GaussJordanElimination.stringArray(GaussJordanElimination.rowReduce(matrix)));
+                    outputArea.setText(GaussJordanElimination.stringArray(GaussJordanElimination.rowReduce(matrix), !decimalToggle.isSelected()));
 
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(gridPanel, "Invalid input. Please enter a real number in "

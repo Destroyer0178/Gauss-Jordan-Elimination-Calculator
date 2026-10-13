@@ -161,14 +161,30 @@ public class GaussJordanElimination {
      * @param arr the 2d array to be transformed
      * @return the transformed array as a string
      */
-    public static String stringArray(double[][] arr) {
+    public static String stringArray(double[][] arr, boolean fraction) {
         String stringArray = "";
         for (int i = 0; i < arr.length; i++) {
             stringArray += "[";
             for (int j = 0; j < arr[i].length - 1; j++) {
-                stringArray += String.format("%.3f, ", arr[i][j]);
+                if (fraction) {
+                    if (Math.floor(arr[i][j]) != arr[i][j]) {
+                        stringArray += String.format("%s, ", convertDecimalToFraction(arr[i][j]));
+                    } else {
+                        stringArray += String.format("%.1f, ", arr[i][j]);
+                    }
+                } else {
+                    stringArray += String.format("%.3f, ", arr[i][j]);
+                }
             }
-            stringArray += String.format("%.3f]\n", arr[i][arr[i].length - 1]);
+            if (fraction) {
+                if (Math.floor(arr[i][arr[i].length - 1]) != arr[i][arr[i].length - 1]) {
+                    stringArray += String.format("%s]\n", convertDecimalToFraction(arr[i][arr[i].length - 1]));
+                } else {
+                    stringArray += String.format("%.1f]\n", arr[i][arr[i].length - 1]);
+                }
+            } else {
+                stringArray += String.format("%.3f]\n", arr[i][arr[i].length - 1]);
+            }
         }
         return stringArray;
     }
@@ -187,10 +203,35 @@ public class GaussJordanElimination {
      * @param entry the number for which the determination should be made
      * @param tolerance the minimum value for which the absolute value of the floating point number 
      *                  can be without being zeroed
-     * @return a boolean value, true if the entry should be zeroed and false otherwise
+     * @return true if the entry should be zeroed and false otherwise
      */
     public static boolean shouldZero(double entry, double tolerance) {
         return (entry < tolerance && entry >  tolerance * -1);
+    }
+
+    /**
+     * Uses continued fractions to convert and decimal input to a fraction as a string.
+     * obtained code from here: https://stackoverflow.com/questions/31585931/how-to-convert-decimal-to-fractions
+     * @param x the decimal value to be converted
+     * @return the fraction conversion as a string
+     */
+    public static String convertDecimalToFraction(double x) {
+        if (x < 0){
+            return "-" + convertDecimalToFraction(-x);
+        }
+
+        double tolerance = 1.0E-6;
+        double h1 = 1; double h2 =0 ;
+        double k1 = 0; double k2 = 1;
+        double b = x;
+        do {
+            double a = Math.floor(b);
+            double aux = h1; h1 = a * h1 + h2; h2 = aux;
+            aux = k1; k1 = a * k1 + k2; k2 = aux;
+            b = 1 / (b - a);
+        } while (Math.abs(x - h1 / k1) > x * tolerance);
+
+        return (int) h1 + "/" + (int) k1;
     }
 
     // public static void main(String[] args) {
