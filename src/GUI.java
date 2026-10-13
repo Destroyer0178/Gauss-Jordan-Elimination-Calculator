@@ -71,11 +71,13 @@ public class GUI extends JFrame{
                             matrix[row][col] = Double.parseDouble(matrixFields[row][col].getText().trim());
                         }
                     }
-                    outputArea.setText(GaussJordanElimination.stringArray(GaussJordanElimination.rowReduce(matrix), !decimalToggle.isSelected()));
+                    outputArea.setText(GaussJordanElimination.formatMatrix(GaussJordanElimination.rowReduce(matrix), !decimalToggle.isSelected()));
 
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(gridPanel, "Invalid input. Please enter a real number in "
                         + "each matrix entry.");
+                } catch (NullPointerException ex) {
+                    JOptionPane.showMessageDialog(gridPanel, "The grid has not been initialized.");
                 }
             }
         });
@@ -120,6 +122,5 @@ public class GUI extends JFrame{
         SwingUtilities.invokeLater(() -> {
             new GUI().setVisible(true);
         });
-
     }
 }

@@ -3,9 +3,9 @@ package src;
 public class GaussJordanElimination {
 
     /**
-     * Adds two rows togethor and multiplies each by a given scalar multiple before replacing rowTwo with the result.
+     * Adds two rows together and multiplies each by a given scalar multiple before replacing rowTwo with the result.
      * @param rowOne the first row of the matrix that will remain unchanged.
-     * @param rowTwo the secoond row of the matrix that will be assigned the result of the row operation
+     * @param rowTwo the second row of the matrix that will be assigned the result of the row operation
      * @param scalarOne the scalar value by which the first row will be multiplied
      * @param scalarTwo the scalar value by which the second row will be multiplied
      * @return the changed row resulting from the row operation
@@ -66,9 +66,9 @@ public class GaussJordanElimination {
         }
 
         for (int i = 0; i < rowBound; i++) {
-            if (shouldZero(matrix[i][i], Math.pow(10.0, -15))) {
+            if (shouldZero(matrix[i][i], Math.pow(10.0, -10))) {
                 for (int j = i; j < matrix.length; j++) {
-                    if (!shouldZero(matrix[j][i], Math.pow(10.0, -15))) {
+                    if (!shouldZero(matrix[j][i], Math.pow(10.0, -10))) {
                         rowSwap(matrix, j, i);
                         break;
                     }
@@ -99,7 +99,7 @@ public class GaussJordanElimination {
                 if (pivot != 0) {
                     matrix[i][j] /= pivot;
                 }
-                if (shouldZero(matrix[i][j], Math.pow(10.0, -15))) {
+                if (shouldZero(matrix[i][j], Math.pow(10.0, -10))) {
                     matrix[i][j] = 0;
                 }
             }
@@ -108,7 +108,7 @@ public class GaussJordanElimination {
         if (rowBound == matrix[0].length) {
             for (int i = matrix[0].length; i < matrix.length; i++) {
                 for (int j = 0; j < matrix[i].length; j++) {
-                    if (shouldZero(matrix[i][j], Math.pow(10.0, -15))) {
+                    if (shouldZero(matrix[i][j], Math.pow(10.0, -10))) {
                         matrix[i][j] = 0;
                     }
                 }
@@ -133,13 +133,13 @@ public class GaussJordanElimination {
 
         for (int i = 0; i < rowBound; i++) {
             double pivotVal = matrix[i][i];
-            if (shouldZero(pivotVal, Math.pow(10.0,-15))) {
+            if (shouldZero(pivotVal, Math.pow(10.0,-10))) {
                 sortMatrix(matrix);
                 pivotVal = matrix[i][i];
             }
-            if (shouldZero(pivotVal, Math.pow(10.0,-15))) {
+            if (shouldZero(pivotVal, Math.pow(10.0,-10))) {
                 continue;
-            }
+            } 
             for (int j = 0; j < matrix.length; j++) {
                 double rowVal = matrix[j][i];
                 if (j != i) {
@@ -161,7 +161,7 @@ public class GaussJordanElimination {
      * @param arr the 2d array to be transformed
      * @return the transformed array as a string
      */
-    public static String stringArray(double[][] arr, boolean fraction) {
+    public static String formatMatrix(double[][] arr, boolean fraction) {
         String stringArray = "";
         for (int i = 0; i < arr.length; i++) {
             stringArray += "[";
@@ -199,7 +199,7 @@ public class GaussJordanElimination {
     }
 
     /**
-     * Determines if a given floating point number should be zeroed using a user inputted tolerance.
+     * Determines if a given floating point number should be zeroed using an inputted tolerance.
      * @param entry the number for which the determination should be made
      * @param tolerance the minimum value for which the absolute value of the floating point number 
      *                  can be without being zeroed
