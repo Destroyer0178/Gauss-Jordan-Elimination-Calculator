@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class GaussJordanElimination {
 
+    public static final double TOLERANCE = 10.0e-10;
+
     /**
      * Adds two rows together and multiplies each by a given scalar multiple before replacing rowTwo with the result.
      * @param rowOne the first row of the matrix that will remain unchanged.
@@ -59,23 +61,22 @@ public class GaussJordanElimination {
      * @param matrix the matrix that is to be sorted
      * @return the matrix after the sorting has taken place to eliminate the first found zero pivot
      */
-    public static double[][] sortMatrix(double[][] matrix) {
-        int rowBound;
-        if (matrix.length > matrix[0].length) {
-            rowBound = matrix[0].length;
-        } else {
-            rowBound = matrix.length;
+    public static double[][] sortMatrix(double[][] matrix, ArrayList<Integer> pivotCols, int currentCol) {
+        int emptyCount = 0;
+        for (int i = 0; i < pivotCols.size(); i++) {
+            if (pivotCols.get(i) == -1) {
+                emptyCount++;
+            }
         }
 
-        for (int i = 0; i < rowBound; i++) {
-            if (shouldZero(matrix[i][i], Math.pow(10.0, -10))) {
-                for (int j = i; j < matrix.length; j++) {
-                    if (!shouldZero(matrix[j][i], Math.pow(10.0, -10))) {
-                        rowSwap(matrix, j, i);
-                        break;
-                    }
+        int searchRow = pivotCols.size() - emptyCount;
+        if (shouldZero(matrix[searchRow][currentCol], TOLERANCE)) {
+            for (int j = searchRow; j < matrix.length; j++) {
+                if (!shouldZero(matrix[j][currentCol], TOLERANCE)) {
+                    rowSwap(matrix, j, searchRow);
+                    break;
                 }
-            } 
+            }
         }
 
         return matrix;
@@ -95,27 +96,17 @@ public class GaussJordanElimination {
             rowBound = matrix.length;
         }
 
-        for (int i = 0; i < rowBound; i++) {
+        for (int i = 0; i < pivotCols.size(); i++) {
             if (pivotCols.get(i) == -1) {
                 continue;
-            } 
+            }
             double pivot = matrix[i][pivotCols.get(i)];
             for (int j = 0; j < matrix[i].length; j++) {
-                if (!shouldZero(pivot, Math.pow(10.0, -10))) {
+                if (!shouldZero(pivot, TOLERANCE)) {
                     matrix[i][j] /= pivot;
                 }
-                if (shouldZero(matrix[i][j], Math.pow(10.0, -10))) {
+                if (shouldZero(matrix[i][j], TOLERANCE)) {
                     matrix[i][j] = 0;
-                }
-            }
-        }
-
-        if (rowBound == matrix[0].length) {
-            for (int i = matrix[0].length; i < matrix.length; i++) {
-                for (int j = 0; j < matrix[i].length; j++) {
-                    if (shouldZero(matrix[i][j], Math.pow(10.0, -10))) {
-                        matrix[i][j] = 0;
-                    }
                 }
             }
         }
@@ -130,21 +121,24 @@ public class GaussJordanElimination {
      * @param col the starting column to analyze
      * @return the column in which a valid pivot is located
      */
-    public static int findPivotCol(double[][] matrix, int row, int col) {
+    public static int findPivotCol(double[][] matrix, int row, int col, ArrayList<Integer> pivotCols) {
         double pivotVal = matrix[row][col];
-        if (shouldZero(pivotVal, Math.pow(10.0,-10))) {
-            sortMatrix(matrix);
+        if (shouldZero(pivotVal, TOLERANCE)) {
+            sortMatrix(matrix, pivotCols, col);
             pivotVal = matrix[row][col];
         } else {
             return col;
         }
 
-        if (shouldZero(pivotVal, Math.pow(10.0,-10))) {
+        if (shouldZero(pivotVal, TOLERANCE)) {
             for (int i = col + 1; i < matrix[0].length; i++) {
                 pivotVal = matrix[row][i];
-                if (shouldZero(pivotVal, Math.pow(10.0,-10))) {
-                    sortMatrix(matrix);
+                if (shouldZero(pivotVal, TOLERANCE)) {
+                    sortMatrix(matrix, pivotCols, i);
                     pivotVal = matrix[row][i];
+                    if (!shouldZero(pivotVal, TOLERANCE)) {
+                        return i;
+                    }
                 } else {
                     return i;
                 }
@@ -172,7 +166,7 @@ public class GaussJordanElimination {
         int currentCol = 0;
         ArrayList<Integer> pivotLocs = new ArrayList<>();
         for (int i = 0; i < rowBound; i++) {
-            currentCol = findPivotCol(matrix, i, currentCol);
+            currentCol = findPivotCol(matrix, i, currentCol, pivotLocs);
             pivotLocs.add(currentCol);
             if (currentCol == -1) {
                 break;
@@ -272,11 +266,12 @@ public class GaussJordanElimination {
         return (int) h1 + "/" + (int) k1;
     }
 
-    // public static void main(String[] args) {
-    //     double[][] matrix = {{0, randomNum(10), randomNum(10)}, {randomNum(10), randomNum(10), randomNum(10)}, 
-    //       {randomNum(10), randomNum(10), randomNum(10)}, {randomNum(10), randomNum(10), randomNum(10)}};
-    //     System.out.println(stringArray(matrix));
-    //     matrix = rowReduce(matrix);
-    //     System.out.println(stringArray(matrix));
+    //public static void main(String[] args) {
+        //double[][] matrix = {{0, 0, 1},
+                             //{0, 3, 5},
+                             //{0, 0, 0}};
+        //System.out.println(formatMatrix(matrix, true));
+        //matrix = rowReduce(matrix);
+        //System.out.println(formatMatrix(matrix, true));
     //}
 }

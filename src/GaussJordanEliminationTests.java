@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import java.util.ArrayList;
 
 public class GaussJordanEliminationTests {
 
@@ -17,7 +18,8 @@ public class GaussJordanEliminationTests {
             {0, 0, 0}
         };
 
-        int pivotCol = GaussJordanElimination.findPivotCol(matrix, 0, 0);
+        ArrayList<Integer> pivotCols = new ArrayList<>();
+        int pivotCol = GaussJordanElimination.findPivotCol(matrix, 0, 0, pivotCols);
 
         assertEquals("Should choose the earlier column with a pivot below the active row",
             1, pivotCol);
@@ -33,7 +35,8 @@ public class GaussJordanEliminationTests {
             {0, 2, 4}
         };
 
-        int pivotCol = GaussJordanElimination.findPivotCol(matrix, 1, 1);
+        ArrayList<Integer> pivotCols = new ArrayList<>();
+        int pivotCol = GaussJordanElimination.findPivotCol(matrix, 1, 1, pivotCols);
 
         assertEquals("Should retain the active column when it has a lower-row pivot",
             1, pivotCol);
@@ -48,7 +51,8 @@ public class GaussJordanEliminationTests {
             {0, 0, 0}
         };
 
-        int pivotCol = GaussJordanElimination.findPivotCol(matrix, 1, 1);
+        ArrayList<Integer> pivotCols = new ArrayList<>();
+        int pivotCol = GaussJordanElimination.findPivotCol(matrix, 1, 1, pivotCols);
 
         assertEquals("Should report no pivot in the remaining columns", -1, pivotCol);
     }
