@@ -1,5 +1,7 @@
 package src;
 
+import java.util.ArrayList;
+
 public class GaussJordanElimination {
 
     /**
@@ -85,7 +87,7 @@ public class GaussJordanElimination {
      * @param matrix the matrix to be normalized
      * @return the normalized matrix
      */
-    public static double[][] simplifyMatrix(double[][] matrix) {
+    public static double[][] simplifyMatrix(double[][] matrix, ArrayList<Integer> pivotCols) {
         int rowBound;
         if (matrix.length > matrix[0].length) {
             rowBound = matrix[0].length;
@@ -94,9 +96,12 @@ public class GaussJordanElimination {
         }
 
         for (int i = 0; i < rowBound; i++) {
-            double pivot = matrix[i][i];
+            if (pivotCols.get(i) == -1) {
+                continue;
+            } 
+            double pivot = matrix[i][pivotCols.get(i)];
             for (int j = 0; j < matrix[i].length; j++) {
-                if (pivot != 0) {
+                if (!shouldZero(pivot, Math.pow(10.0, -10))) {
                     matrix[i][j] /= pivot;
                 }
                 if (shouldZero(matrix[i][j], Math.pow(10.0, -10))) {
@@ -119,6 +124,39 @@ public class GaussJordanElimination {
     }
 
     /**
+     * Locates the next column in a matrix that contains a valid pivot.
+     * @param matrix the matrix to be analyzed
+     * @param row the row the pivot must be on
+     * @param col the starting column to analyze
+     * @return the column in which a valid pivot is located
+     */
+    public static int findPivotCol(double[][] matrix, int row, int col) {
+        double pivotVal = matrix[row][col];
+        if (shouldZero(pivotVal, Math.pow(10.0,-10))) {
+            sortMatrix(matrix);
+            pivotVal = matrix[row][col];
+        } else {
+            return col;
+        }
+
+        if (shouldZero(pivotVal, Math.pow(10.0,-10))) {
+            for (int i = col + 1; i < matrix[0].length; i++) {
+                pivotVal = matrix[row][i];
+                if (shouldZero(pivotVal, Math.pow(10.0,-10))) {
+                    sortMatrix(matrix);
+                    pivotVal = matrix[row][i];
+                } else {
+                    return i;
+                }
+            }
+        } else {
+            return col; 
+        }
+
+        return -1;
+    }
+
+    /**
      * Applies Gauss-Jordan elimination to a given matrix to transform it into reduced row-echelon-form.
      * @param matrix the matrix to be reduced
      * @return the reduced matrix
@@ -131,17 +169,17 @@ public class GaussJordanElimination {
             rowBound = matrix.length;
         }
 
+        int currentCol = 0;
+        ArrayList<Integer> pivotLocs = new ArrayList<>();
         for (int i = 0; i < rowBound; i++) {
-            double pivotVal = matrix[i][i];
-            if (shouldZero(pivotVal, Math.pow(10.0,-10))) {
-                sortMatrix(matrix);
-                pivotVal = matrix[i][i];
+            currentCol = findPivotCol(matrix, i, currentCol);
+            pivotLocs.add(currentCol);
+            if (currentCol == -1) {
+                break;
             }
-            if (shouldZero(pivotVal, Math.pow(10.0,-10))) {
-                continue;
-            } 
+            double pivotVal = matrix[i][currentCol];
             for (int j = 0; j < matrix.length; j++) {
-                double rowVal = matrix[j][i];
+                double rowVal = matrix[j][currentCol];
                 if (j != i) {
                     if (rowVal > 0) {
                         rowAddition(matrix[i], matrix[j], rowVal / pivotVal, -1);
@@ -152,7 +190,7 @@ public class GaussJordanElimination {
             } 
         }
 
-        matrix = simplifyMatrix(matrix);
+        matrix = simplifyMatrix(matrix, pivotLocs);
         return matrix;
     }
 
@@ -210,7 +248,7 @@ public class GaussJordanElimination {
     }
 
     /**
-     * Uses continued fractions to convert and decimal input to a fraction as a string.
+     * Uses continued fractions to convert a decimal input to a fraction as a string.
      * obtained code from here: https://stackoverflow.com/questions/31585931/how-to-convert-decimal-to-fractions
      * @param x the decimal value to be converted
      * @return the fraction conversion as a string

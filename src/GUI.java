@@ -89,29 +89,29 @@ public class GUI extends JFrame{
      */
     private void generateGrid() {
         try {
-            int rows = Integer.parseInt(numRowsInput.getText().trim());
-            int cols = Integer.parseInt(numColsInput.getText().trim());
+            int rows = Integer.parseInt(this.numRowsInput.getText().trim());
+            int cols = Integer.parseInt(this.numColsInput.getText().trim());
 
             if (rows <= 0 || cols <= 0) {
                 JOptionPane.showMessageDialog(this, "Please enter a positive integer.");
                 return;
             }
 
-            matrixFields = new JTextField[rows][cols];
-            gridPanel.removeAll(); 
-            gridPanel.setLayout(new GridLayout(rows, cols, 5, 5));
+            this.matrixFields = new JTextField[rows][cols];
+            this.gridPanel.removeAll(); 
+            this.gridPanel.setLayout(new GridLayout(rows, cols, 5, 5));
 
             for (int row = 0; row < rows; row++) {
                 for (int col = 0; col < cols; col++) {
                     JTextField textField = new JTextField();
                     textField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
-                    matrixFields[row][col] = textField;
-                    gridPanel.add(new JScrollPane(textField));
+                    this.matrixFields[row][col] = textField;
+                    this.gridPanel.add(new JScrollPane(textField));
                 }
             }
 
-            gridPanel.revalidate();
-            gridPanel.repaint();
+            this.gridPanel.revalidate();
+            this.gridPanel.repaint();
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Invalid input. Please enter an integer.");

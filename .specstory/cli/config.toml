@@ -108,8 +108,14 @@
 # Antigravity CLI command
 # antigravity_cmd = "agy"
 
+# Grok Build command
+# grok_cmd = "grok"
+
 # Muse Code command
 # muse_cmd = "muse"
+
+# OpenCode command
+# opencode_cmd = "opencode"
 
 # Pi command
 # pi_cmd = "pi"
