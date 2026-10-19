@@ -169,6 +169,26 @@ public class GaussJordanEliminationTests {
         assertMatrixEquals(solutionMatrix, matrix);
     }
 
+    @Test 
+    public void rowReduceCorrectlySolvesMatrixWithOnlyOneNonZeroColumn() {
+        double[][] matrix = {
+            {0, 2, 0},
+            {0, 8, 0},
+            {0, 0, 0},
+            {0, 3, 0}
+        };
+
+        matrix = GaussJordanElimination.rowReduce(matrix);
+        double[][] solutionMatrix = {
+            {0, 1, 0},
+            {0, 0, 0},
+            {0, 0, 0},
+            {0, 0, 0}
+        };
+
+        assertMatrixEquals(solutionMatrix, matrix);
+    }
+
     private static void assertMatrixEquals(double[][] expected, double[][] actual) {
         assertEquals(expected.length, actual.length, "The matrix row counts differ");
         for (int row = 0; row < expected.length; row++) {
