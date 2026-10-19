@@ -266,6 +266,11 @@ public class GaussJordanElimination {
         return (entry < tolerance && entry >  tolerance * -1);
     }
 
+    /**
+     * Creates an exact copy of the entered 2d matrix.
+     * @param matrix the matrix to be copied.
+     * @return an exact copy of the matrix with a new memory address
+     */
     public static double[][] copyMatrix(double[][] matrix) {
         double[][] copy = new double[matrix.length][matrix[0].length];
         for (int i = 0; i < matrix.length; i++) {
@@ -301,13 +306,13 @@ public class GaussJordanElimination {
         return (int) h1 + "/" + (int) k1;
     }
 
-    public static void main(String[] args) {
-        double[][] matrix = {{0, 0, 1},
-                             {0, 3, 5},
-                             {0, 0, 0}};
-        System.out.println(formatMatrix(matrix, true));
-        ArrayList<double[][]> steps = rowReduceWithSteps(matrix);
-        matrix = steps.get(steps.size() - 1);
-        System.out.println(formatMatrix(matrix, true));
-    }
+    // public static void main(String[] args) {
+    //     double[][] matrix = {{0, 0, 1},
+    //                          {0, 3, 5},
+    //                          {0, 0, 0}};
+    //     System.out.println(formatMatrix(matrix, true));
+    //     ArrayList<double[][]> steps = rowReduceWithSteps(matrix);
+    //     matrix = steps.get(steps.size() - 1);
+    //     System.out.println(formatMatrix(matrix, true));
+    // }
 }

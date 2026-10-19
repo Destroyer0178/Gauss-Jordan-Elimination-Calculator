@@ -9,7 +9,7 @@ Implementing the column searching algorithm for pivots rather than simply search
 
 
 ## GUI
-This program includes a graphical user interface in which the user can input the entries of a matrix of any given size. The GUI itself utilizes Java Swing to create a 2d array of text fields which function as matrix value inputs. The GUI will reject any invalid inputs such as matrices that do not have entries in each row and column or attempting to list the size of either the rows or columns of the matrix as less than one or a non-integer value. It also offers the ability for the user to switch between decimal and fraction output for the row reduced matrix.
+This program includes a graphical user interface in which the user can input the entries of a matrix of any given size. The GUI itself utilizes Java Swing to create a 2d array of text fields which function as matrix value inputs. The GUI will reject any invalid inputs such as matrices that do not have entries in each row and column or attempting to list the size of either the rows or columns of the matrix as less than one or a non-integer value. It also offers the ability for the user to switch between decimal and fraction output for the row reduced matrix. The user is also able to toggle between viewing the reduction steps or only viewing the final result.
 
 
 ## Usage as a System Solver
