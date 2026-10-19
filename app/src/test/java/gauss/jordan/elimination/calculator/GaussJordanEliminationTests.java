@@ -95,6 +95,80 @@ public class GaussJordanEliminationTests {
         assertMatrixEquals(solutionMatrix, matrix);
     }
 
+     @Test 
+    public void rowReduceCorrectlySolvesMatrixWithLinearlyDependentColumns() {
+        double[][] matrix = {
+            {1, 2, 3, 6},
+            {2, 4, 2, 8},
+            {3, 6, 9, 7}
+        };
+
+        matrix = GaussJordanElimination.rowReduce(matrix);
+        double[][] solutionMatrix = {
+            {1, 2, 0, 0},
+            {0, 0, 1, 0},
+            {0, 0, 0, 1}
+        };
+
+        assertMatrixEquals(solutionMatrix, matrix);
+    }
+
+    @Test 
+    public void rowReduceCorrectlySolvesMatrixWithZeroColumns() {
+        double[][] matrix = {
+            {4, 0, 3, 6},
+            {2, 0, 2, 11},
+            {3, 0, 9, 7}
+        };
+
+        matrix = GaussJordanElimination.rowReduce(matrix);
+        double[][] solutionMatrix = {
+            {1, 0, 0, 0},
+            {0, 0, 1, 0},
+            {0, 0, 0, 1}
+        };
+
+        assertMatrixEquals(solutionMatrix, matrix);
+    }
+
+    @Test 
+    public void rowReduceCorrectlySolvesZeroMatrix() {
+        double[][] matrix = {
+            {0, 0, 0},
+            {0, 0, 0},
+            {0, 0, 0}
+        };
+
+        matrix = GaussJordanElimination.rowReduce(matrix);
+        double[][] solutionMatrix = {
+            {0, 0, 0},
+            {0, 0, 0},
+            {0, 0, 0}
+        };
+
+        assertMatrixEquals(solutionMatrix, matrix);
+    }
+
+    @Test 
+    public void rowReduceCorrectlySolvesMatrixWithMoreRowsThanColumns() {
+        double[][] matrix = {
+            {4, 0, 3},
+            {2, 0, 2},
+            {3, 0, 9},
+            {7, 3, 8}
+        };
+
+        matrix = GaussJordanElimination.rowReduce(matrix);
+        double[][] solutionMatrix = {
+            {1, 0, 0},
+            {0, 1, 0},
+            {0, 0, 1},
+            {0, 0, 0}
+        };
+
+        assertMatrixEquals(solutionMatrix, matrix);
+    }
+
     private static void assertMatrixEquals(double[][] expected, double[][] actual) {
         assertEquals(expected.length, actual.length, "The matrix row counts differ");
         for (int row = 0; row < expected.length; row++) {
