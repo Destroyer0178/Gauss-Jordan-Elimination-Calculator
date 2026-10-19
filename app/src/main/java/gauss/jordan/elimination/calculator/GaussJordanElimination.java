@@ -139,6 +139,54 @@ public class GaussJordanElimination {
     /**
      * Applies Gauss-Jordan elimination to a given matrix to transform it into reduced row-echelon-form.
      * @param matrix the matrix to be reduced
+     * @return An arraylist containing copies of the matrix after each row reduction step
+     */
+    public static ArrayList<double[][]> rowReduceWithSteps(double[][] matrix) {
+        int rowBound;
+        if (matrix.length > matrix[0].length) {
+            rowBound = matrix[0].length;
+        } else {
+            rowBound = matrix.length;
+        }
+
+        int currentCol = 0;
+        ArrayList<Integer> pivotLocs = new ArrayList<>();
+        ArrayList<double[][]> steps = new ArrayList<>();
+        steps.add(copyMatrix(matrix));
+        for (int i = 0; i < rowBound; i++) {
+            currentCol = findPivotCol(matrix, i, currentCol, pivotLocs);
+            pivotLocs.add(currentCol);
+            if (currentCol == -1) {
+                break;
+            }
+            double pivotVal = matrix[i][currentCol];
+            for (int j = 0; j < matrix.length; j++) {
+                double rowVal = matrix[j][currentCol];
+                if (j != i) {
+                    if (rowVal > 0) {
+                        rowAddition(matrix[i], matrix[j], rowVal / pivotVal, -1);
+                    } else if (rowVal < 0) {
+                        rowAddition(matrix[i], matrix[j], -1 * rowVal / pivotVal, 1);
+                    } 
+                }
+            } 
+            simplifyMatrix(matrix, pivotLocs);
+            steps.add(copyMatrix(matrix));
+        }
+
+        for (int i = 1; i < steps.size(); i++) {
+            if (steps.get(i).equals(steps.get(i - 1))) {
+                steps.remove(i);
+                i--;
+            }
+        }
+
+        return steps;
+    }
+
+    /**
+     * Applies Gauss-Jordan elimination to a given matrix to transform it into reduced row-echelon-form.
+     * @param matrix the matrix to be reduced
      * @return the reduced matrix
      */
     public static double[][] rowReduce(double[][] matrix) {
@@ -218,6 +266,16 @@ public class GaussJordanElimination {
         return (entry < tolerance && entry >  tolerance * -1);
     }
 
+    public static double[][] copyMatrix(double[][] matrix) {
+        double[][] copy = new double[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                copy[i][j] = matrix[i][j];
+            }
+        }
+        return copy;
+    }
+
     /**
      * Uses continued fractions to convert a decimal input to a fraction as a string.
      * obtained code from here: https://stackoverflow.com/questions/31585931/how-to-convert-decimal-to-fractions
@@ -243,12 +301,13 @@ public class GaussJordanElimination {
         return (int) h1 + "/" + (int) k1;
     }
 
-    //public static void main(String[] args) {
-        //double[][] matrix = {{0, 0, 1},
-                             //{0, 3, 5},
-                             //{0, 0, 0}};
-        //System.out.println(formatMatrix(matrix, true));
-        //matrix = rowReduce(matrix);
-        //System.out.println(formatMatrix(matrix, true));
-    //}
+    public static void main(String[] args) {
+        double[][] matrix = {{0, 0, 1},
+                             {0, 3, 5},
+                             {0, 0, 0}};
+        System.out.println(formatMatrix(matrix, true));
+        ArrayList<double[][]> steps = rowReduceWithSteps(matrix);
+        matrix = steps.get(steps.size() - 1);
+        System.out.println(formatMatrix(matrix, true));
+    }
 }

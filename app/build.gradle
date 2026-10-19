@@ -34,7 +34,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'gauss.jordan.elimination.calculator.App'
+    mainClass = 'gauss.jordan.elimination.calculator.GUI'
 }
 
 tasks.named('test') {

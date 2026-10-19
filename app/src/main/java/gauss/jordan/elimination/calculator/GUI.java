@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.concurrent.Flow;
 
 public class GUI extends JFrame{
 
@@ -34,6 +36,8 @@ public class GUI extends JFrame{
         inputPanel.add(createGridButton);
         JCheckBox decimalToggle = new JCheckBox("Decimal");
         inputPanel.add(decimalToggle);
+        JCheckBox stepsToggle = new JCheckBox("Include Steps");
+        inputPanel.add(stepsToggle);
 
         gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(1, 1));
@@ -49,9 +53,22 @@ public class GUI extends JFrame{
         outputArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
         outputPanel.add(outputArea);
 
+        JPanel stepsPanel = new JPanel();
+        stepsPanel.setLayout(new FlowLayout());
+
+        JScrollPane stepsScrollPane = new JScrollPane(stepsPanel);
+        stepsScrollPane.setVisible(false);
+
+        stepsPanel.add(new JLabel("Steps"));
+        JTextArea stepsArea = new JTextArea("");
+        stepsArea.setEditable(false);
+        stepsArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        stepsPanel.add(stepsArea);
+
         add(inputPanel, BorderLayout.NORTH);
         add(new JScrollPane(gridPanel), BorderLayout.CENTER);
         add(outputPanel, BorderLayout.SOUTH);
+        add(stepsScrollPane, BorderLayout.EAST);
 
         createGridButton.addActionListener(new ActionListener() {
             @Override
@@ -71,7 +88,26 @@ public class GUI extends JFrame{
                             matrix[row][col] = Double.parseDouble(matrixFields[row][col].getText().trim());
                         }
                     }
-                    outputArea.setText(GaussJordanElimination.formatMatrix(GaussJordanElimination.rowReduce(matrix), !decimalToggle.isSelected()));
+
+                    if (stepsToggle.isSelected()) {
+                        ArrayList<double[][]> steps = GaussJordanElimination.rowReduceWithSteps(matrix);
+                        String result = "";
+                        for (int i = 0; i < steps.size(); i++) {
+                            result += GaussJordanElimination.formatMatrix(steps.get(i), !decimalToggle.isSelected()) + "\n";
+                        }
+                        stepsArea.setText(result);
+                        outputArea.setText(GaussJordanElimination.formatMatrix(steps.get(steps.size() - 1), !decimalToggle.isSelected()));
+                        stepsScrollPane.setVisible(true);
+                        getContentPane().revalidate();
+                        getContentPane().repaint();
+                    } else {
+                        matrix = GaussJordanElimination.rowReduce(matrix);
+                        outputArea.setText(GaussJordanElimination.formatMatrix(matrix, !decimalToggle.isSelected()));
+                        stepsScrollPane.setVisible(false);
+                        getContentPane().revalidate();
+                        getContentPane().repaint();
+                    }
+        
 
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(gridPanel, "Invalid input. Please enter a real number in "
@@ -93,7 +129,7 @@ public class GUI extends JFrame{
             int cols = Integer.parseInt(this.numColsInput.getText().trim());
 
             if (rows <= 0 || cols <= 0) {
-                JOptionPane.showMessageDialog(this, "Please enter a positive integer.");
+                JOptionPane.showMessageDialog(this, "Please enter a positive integer greater than zero.");
                 return;
             }
 
